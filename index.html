@@ -12,6 +12,7 @@
             --text: #1e293b;
             --green: #10b981;
             --red: #ef4444;
+            --orange: #f59e0b;
             --border: #e2e8f0;
             --overlay: rgba(0, 0, 0, 0.5);
         }
@@ -40,25 +41,15 @@
             padding: 16px; 
             position: fixed; 
             z-index: 1000; 
-            
-            /* POSITIONING UPDATED TO TOP-RIGHT */
             right: 20px;
             top: 20px;
-            left: auto; /* Remove centering */
-            transform: translateY(-20px); /* Start slightly above for slide effect */
-            
+            transform: translateY(-20px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             font-weight: 500;
             opacity: 0;
             transition: opacity 0.3s, transform 0.3s;
         }
-
-        #notification.show { 
-            visibility: visible; 
-            opacity: 1; 
-            transform: translateY(0); /* Slide down into place */
-        }
-        
+        #notification.show { visibility: visible; opacity: 1; transform: translateY(0); }
         #notification.success { background-color: var(--green); }
         #notification.error { background-color: var(--red); }
 
@@ -94,21 +85,10 @@
 
         .modal-box h3 { margin-top: 0; color: var(--text); }
         .modal-box p { color: #64748b; margin-bottom: 25px; }
-
         .modal-actions { display: flex; gap: 10px; justify-content: center; }
-        
-        .btn-modal {
-            padding: 10px 20px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
+        .btn-modal { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
         .btn-cancel { background: #e2e8f0; color: var(--text); }
         .btn-confirm { background: var(--red); color: white; }
-        .btn-cancel:hover { background: #cbd5e1; }
-        .btn-confirm:hover { opacity: 0.9; }
 
         /* --- MAIN STYLES --- */
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -127,8 +107,14 @@
         input, select, textarea { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; font-family: inherit; }
         textarea { resize: vertical; }
 
-        button.add-btn { background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; height: 40px; align-self: end; }
+        /* Button Group for Edit Mode */
+        .btn-group { display: flex; gap: 10px; justify-content: flex-end; }
+
+        button.add-btn { background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; height: 40px; }
         button.add-btn:hover { opacity: 0.9; }
+
+        button.cancel-btn { background-color: #94a3b8; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; height: 40px; display: none; }
+        button.cancel-btn:hover { opacity: 0.9; }
 
         .controls { display: flex; gap: 10px; margin-bottom: 15px; }
         .outline-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
@@ -142,7 +128,13 @@
         .col-date { width: 100px; }
         .profit { color: var(--green); font-weight: bold; }
         .loss { color: var(--red); font-weight: bold; }
-        .delete-btn { color: #ef4444; background: none; border: none; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
+        
+        .action-cell { display: flex; gap: 8px; }
+        .icon-btn { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px; border-radius: 4px; }
+        .edit-btn { color: var(--primary); }
+        .edit-btn:hover { background-color: #e0f2fe; }
+        .delete-btn { color: var(--red); }
+        .delete-btn:hover { background-color: #fee2e2; }
 
     </style>
 </head>
@@ -188,7 +180,7 @@
     </div>
 
     <div class="input-section">
-        <form id="tradeForm" onsubmit="addTrade(event)">
+        <form id="tradeForm" onsubmit="handleFormSubmit(event)">
             <div class="form-grid">
                 <div class="form-group">
                     <label>Date</label>
@@ -223,8 +215,9 @@
                     <textarea id="notes" rows="2" placeholder="Why did you take this trade? Strategy used?"></textarea>
                 </div>
 
-                <div class="form-group full-width" style="text-align: right;">
-                    <button type="submit" class="add-btn">Add Trade</button>
+                <div class="form-group full-width btn-group">
+                    <button type="button" class="cancel-btn" id="cancelEditBtn" onclick="cancelEdit()">Cancel Edit</button>
+                    <button type="submit" class="add-btn" id="submitBtn">Add Trade</button>
                 </div>
             </div>
         </form>
@@ -252,6 +245,7 @@
 
 <script>
     let trades = JSON.parse(localStorage.getItem('tradingJournal')) || [];
+    let editId = null; // Track if we are editing
     
     // -- MODAL LOGIC --
     let pendingCallback = null;
@@ -289,32 +283,87 @@
         render();
     };
 
-    function addTrade(e) {
+    function handleFormSubmit(e) {
         e.preventDefault();
+        
         const type = document.getElementById('type').value;
         const entry = parseFloat(document.getElementById('entry').value);
         const exit = parseFloat(document.getElementById('exit').value);
         const qty = parseInt(document.getElementById('qty').value);
         const notes = document.getElementById('notes').value;
+        const symbol = document.getElementById('symbol').value.toUpperCase();
+        const date = document.getElementById('date').value;
 
         let pnl = (type === 'LONG') ? (exit - entry) * qty : (entry - exit) * qty;
 
-        const trade = {
-            id: Date.now(),
-            date: document.getElementById('date').value,
-            symbol: document.getElementById('symbol').value.toUpperCase(),
-            type, entry, exit, qty, pnl, notes
-        };
+        if (editId) {
+            // --- UPDATE EXISTING TRADE ---
+            const index = trades.findIndex(t => t.id === editId);
+            if (index !== -1) {
+                trades[index] = {
+                    id: editId, // Keep original ID
+                    date, symbol, type, entry, exit, qty, pnl, notes
+                };
+                showNotification("Trade Updated Successfully!", "success");
+            }
+            editId = null;
+            resetFormUI();
+        } else {
+            // --- ADD NEW TRADE ---
+            const trade = {
+                id: Date.now(),
+                date, symbol, type, entry, exit, qty, pnl, notes
+            };
+            trades.unshift(trade);
+            showNotification("Trade Added Successfully!", "success");
+        }
 
-        trades.unshift(trade);
         saveAndRender();
-        showNotification("Trade Added Successfully!", "success");
         
+        // Reset form inputs (but keep date)
         const currentDate = document.getElementById('date').value;
         document.getElementById('tradeForm').reset();
         document.getElementById('date').value = currentDate;
     }
 
+    // -- EDIT LOGIC --
+    function editTrade(id) {
+        const trade = trades.find(t => t.id === id);
+        if (!trade) return;
+
+        // Populate Form
+        document.getElementById('date').value = trade.date;
+        document.getElementById('symbol').value = trade.symbol;
+        document.getElementById('type').value = trade.type;
+        document.getElementById('entry').value = trade.entry;
+        document.getElementById('exit').value = trade.exit;
+        document.getElementById('qty').value = trade.qty;
+        document.getElementById('notes').value = trade.notes || '';
+
+        // Change UI to Edit Mode
+        editId = id;
+        document.getElementById('submitBtn').innerText = "Update Trade";
+        document.getElementById('submitBtn').style.backgroundColor = "#f59e0b"; // Orange color
+        document.getElementById('cancelEditBtn').style.display = "block";
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEdit() {
+        editId = null;
+        document.getElementById('tradeForm').reset();
+        document.getElementById('date').valueAsDate = new Date();
+        resetFormUI();
+    }
+
+    function resetFormUI() {
+        document.getElementById('submitBtn').innerText = "Add Trade";
+        document.getElementById('submitBtn').style.backgroundColor = ""; // Reset color
+        document.getElementById('cancelEditBtn').style.display = "none";
+    }
+
+    // -- DELETE LOGIC --
     function triggerDelete(id) {
         showModal(
             "Delete Trade?", 
@@ -325,6 +374,12 @@
 
     function deleteTrade(id) {
         trades = trades.filter(t => t.id !== id);
+        
+        // If we deleted the trade currently being edited, cancel edit mode
+        if (editId === id) {
+            cancelEdit();
+        }
+        
         saveAndRender();
         showNotification("Trade Deleted", "error");
     }
@@ -355,7 +410,10 @@
                         ${trade.pnl >= 0 ? '+' : ''}${trade.pnl.toFixed(2)}
                     </td>
                     <td style="font-size: 0.85rem; color: #555;">${trade.notes || ''}</td>
-                    <td><button class="delete-btn" onclick="triggerDelete(${trade.id})">×</button></td>
+                    <td class="action-cell">
+                        <button class="icon-btn edit-btn" onclick="editTrade(${trade.id})" title="Edit">✏️</button>
+                        <button class="icon-btn delete-btn" onclick="triggerDelete(${trade.id})" title="Delete">🗑️</button>
+                    </td>
                 </tr>
             `;
             tbody.innerHTML += row;
