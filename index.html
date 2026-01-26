@@ -5,100 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Trading Journal</title>
     <style>
-        :root {
-            --bg-color: #f4f6f8;
-            --card-bg: #ffffff;
-            --primary: #2563eb;
-            --text: #1e293b;
-            --green: #10b981;
-            --red: #ef4444;
-            --orange: #f59e0b;
-            --border: #e2e8f0;
-            --overlay: rgba(0, 0, 0, 0.5);
-        }
+        :root { --bg-color: #f4f6f8; --card-bg: #ffffff; --primary: #2563eb; --text: #1e293b; --green: #10b981; --red: #ef4444; --orange: #f59e0b; --border: #e2e8f0; --overlay: rgba(0, 0, 0, 0.5); }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
+        /* --- NAVIGATION TABS --- */
+        .nav-container { display: flex; justify-content: center; margin-bottom: 25px; }
+        .nav-tabs { background: white; padding: 5px; border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: inline-flex; }
+        .nav-btn {
+            border: none; background: none; padding: 10px 25px; border-radius: 25px;
+            cursor: pointer; font-weight: 600; color: #64748b; transition: all 0.2s;
         }
+        .nav-btn.active { background-color: var(--primary); color: white; shadow: 0 2px 5px rgba(37, 99, 235, 0.3); }
+        .nav-btn:hover:not(.active) { background-color: #f1f5f9; }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        /* --- GUIDE SECTION STYLES --- */
+        .guide-box { background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
+        .guide-step { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid var(--border); }
+        .guide-step:last-child { border-bottom: none; }
+        .guide-step h3 { margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .guide-step p { line-height: 1.6; color: #475569; }
+        .guide-highlight { background: #eff6ff; border-left: 4px solid var(--primary); padding: 15px; margin-top: 10px; border-radius: 0 4px 4px 0; }
+        .warning-box { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 15px; border-radius: 8px; margin-top: 20px; font-weight: 500; }
 
-        /* --- NOTIFICATION (TOAST) - TOP RIGHT --- */
-        #notification {
-            visibility: hidden; 
-            min-width: 250px; 
-            background-color: #333; 
-            color: #fff; 
-            text-align: center; 
-            border-radius: 8px; 
-            padding: 16px; 
-            position: fixed; 
-            z-index: 1000; 
-            right: 20px;
-            top: 20px;
-            transform: translateY(-20px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            font-weight: 500;
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-        }
+        /* Notification - Top Right */
+        #notification { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; right: 20px; top: 20px; transform: translateY(-20px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; opacity: 0; transition: opacity 0.3s, transform 0.3s; }
         #notification.show { visibility: visible; opacity: 1; transform: translateY(0); }
         #notification.success { background-color: var(--green); }
         #notification.error { background-color: var(--red); }
 
-        /* --- CONFIRMATION MODAL --- */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--overlay);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(2px);
-        }
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
         .modal-overlay.open { display: flex; }
-        
-        .modal-box {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            animation: popIn 0.2s ease-out;
-        }
-        
-        @keyframes popIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-box h3 { margin-top: 0; color: var(--text); }
-        .modal-box p { color: #64748b; margin-bottom: 25px; }
-        .modal-actions { display: flex; gap: 10px; justify-content: center; }
-        .btn-modal { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
+        .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.2s ease-out; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        .btn-modal { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
         .btn-cancel { background: #e2e8f0; color: var(--text); }
         .btn-confirm { background: var(--red); color: white; }
 
-        /* --- MAIN STYLES --- */
+        /* Main UI */
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        h1 { margin: 0; font-size: 1.5rem; }
-
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .stat-card h3 { margin: 0 0 5px 0; font-size: 0.9rem; color: #64748b; }
         .stat-card p { margin: 0; font-size: 1.5rem; font-weight: bold; }
-
+        
         .input-section { background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; align-items: start; }
         .form-group { display: flex; flex-direction: column; }
@@ -106,36 +58,22 @@
         label { margin-bottom: 5px; font-size: 0.85rem; font-weight: 500; }
         input, select, textarea { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; font-family: inherit; }
         textarea { resize: vertical; }
-
-        /* Button Group for Edit Mode */
         .btn-group { display: flex; gap: 10px; justify-content: flex-end; }
-
         button.add-btn { background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; height: 40px; }
-        button.add-btn:hover { opacity: 0.9; }
-
         button.cancel-btn { background-color: #94a3b8; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; height: 40px; display: none; }
-        button.cancel-btn:hover { opacity: 0.9; }
-
+        
         .controls { display: flex; gap: 10px; margin-bottom: 15px; }
         .outline-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
         #fileInput { display: none; }
-
+        
         .table-container { background: var(--card-bg); border-radius: 8px; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); min-height: 200px; }
         table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 900px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
         th { background-color: #f8fafc; font-weight: 600; }
-        .col-notes { width: 35%; }
-        .col-date { width: 100px; }
         .profit { color: var(--green); font-weight: bold; }
         .loss { color: var(--red); font-weight: bold; }
-        
         .action-cell { display: flex; gap: 8px; }
         .icon-btn { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px; border-radius: 4px; }
-        .edit-btn { color: var(--primary); }
-        .edit-btn:hover { background-color: #e0f2fe; }
-        .delete-btn { color: var(--red); }
-        .delete-btn:hover { background-color: #fee2e2; }
-
     </style>
 </head>
 <body>
@@ -145,339 +83,236 @@
 <div id="confirmModal" class="modal-overlay">
     <div class="modal-box">
         <h3 id="modalTitle">Are you sure?</h3>
-        <p id="modalMessage">This action cannot be undone.</p>
+        <p id="modalMessage">Action cannot be undone.</p>
         <div class="modal-actions">
             <button class="btn-modal btn-cancel" onclick="closeModal()">Cancel</button>
-            <button class="btn-modal btn-confirm" id="confirmActionBtn">Yes, Proceed</button>
+            <button class="btn-modal btn-confirm" id="confirmActionBtn">Confirm</button>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <header>
-        <h1>📈 Trading Journal</h1>
-        <div class="controls">
-            <button class="outline-btn" onclick="downloadJSON()">💾 Save to File</button>
-            <button class="outline-btn" onclick="document.getElementById('fileInput').click()">📂 Load File</button>
-            <button class="outline-btn" style="border-color: #ef4444; color: #ef4444;" onclick="triggerClear()">🗑️ Reset</button>
-            <input type="file" id="fileInput" accept=".json" onchange="loadJSON(this)">
-        </div>
-    </header>
-
-    <div class="stats-grid">
-        <div class="stat-card">
-            <h3>Net P&L</h3>
-            <p id="totalPnL">₹0.00</p>
-        </div>
-        <div class="stat-card">
-            <h3>Win Rate</h3>
-            <p id="winRate">0%</p>
-        </div>
-        <div class="stat-card">
-            <h3>Total Trades</h3>
-            <p id="totalTrades">0</p>
+    
+    <div class="nav-container">
+        <div class="nav-tabs">
+            <button class="nav-btn active" onclick="switchTab('journal', this)">📊 Journal</button>
+            <button class="nav-btn" onclick="switchTab('guide', this)">❓ How to Use</button>
         </div>
     </div>
 
-    <div class="input-section">
-        <form id="tradeForm" onsubmit="handleFormSubmit(event)">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" id="date" required>
-                </div>
-                <div class="form-group">
-                    <label>Symbol</label>
-                    <input type="text" id="symbol" placeholder="e.g. RELIANCE" required>
-                </div>
-                <div class="form-group">
-                    <label>Type</label>
-                    <select id="type">
-                        <option value="LONG">Long (Buy)</option>
-                        <option value="SHORT">Short (Sell)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Entry Price</label>
-                    <input type="number" step="0.05" id="entry" required>
-                </div>
-                <div class="form-group">
-                    <label>Exit Price</label>
-                    <input type="number" step="0.05" id="exit" required>
-                </div>
-                <div class="form-group">
-                    <label>Quantity</label>
-                    <input type="number" id="qty" required>
-                </div>
-                
-                <div class="form-group full-width">
-                    <label>Notes / Description</label>
-                    <textarea id="notes" rows="2" placeholder="Why did you take this trade? Strategy used?"></textarea>
-                </div>
-
-                <div class="form-group full-width btn-group">
-                    <button type="button" class="cancel-btn" id="cancelEditBtn" onclick="cancelEdit()">Cancel Edit</button>
-                    <button type="submit" class="add-btn" id="submitBtn">Add Trade</button>
-                </div>
+    <div id="tab-journal">
+        <header>
+            <h1>My Trading Journal</h1>
+            <div class="controls">
+                <button class="outline-btn" onclick="downloadJSON()">💾 Save Data</button>
+                <button class="outline-btn" onclick="document.getElementById('fileInput').click()">📂 Load Data</button>
+                <button class="outline-btn" style="border-color: #ef4444; color: #ef4444;" onclick="triggerClear()">🗑️ Reset</button>
+                <input type="file" id="fileInput" accept=".json" onchange="loadJSON(this)">
             </div>
-        </form>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Net P&L</h3><p id="totalPnL">₹0.00</p></div>
+            <div class="stat-card"><h3>Win Rate</h3><p id="winRate">0%</p></div>
+            <div class="stat-card"><h3>Total Trades</h3><p id="totalTrades">0</p></div>
+        </div>
+
+        <div class="input-section">
+            <form id="tradeForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-grid">
+                    <div class="form-group"><label>Date</label><input type="date" id="date" required></div>
+                    <div class="form-group"><label>Symbol</label><input type="text" id="symbol" placeholder="e.g. RELIANCE" required></div>
+                    <div class="form-group"><label>Type</label><select id="type"><option value="LONG">Long (Buy)</option><option value="SHORT">Short (Sell)</option></select></div>
+                    <div class="form-group"><label>Entry Price</label><input type="number" step="0.05" id="entry" required></div>
+                    <div class="form-group"><label>Exit Price</label><input type="number" step="0.05" id="exit" required></div>
+                    <div class="form-group"><label>Quantity</label><input type="number" id="qty" required></div>
+                    <div class="form-group full-width"><label>Notes</label><textarea id="notes" rows="2"></textarea></div>
+                    <div class="form-group full-width btn-group">
+                        <button type="button" class="cancel-btn" id="cancelEditBtn" onclick="cancelEdit()">Cancel Edit</button>
+                        <button type="submit" class="add-btn" id="submitBtn">Add Trade</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Date</th><th>Symbol</th><th>Type</th><th>Qty</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Notes</th><th>Action</th></tr></thead>
+                <tbody id="tradeTableBody"></tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th class="col-date">Date</th>
-                    <th>Symbol</th>
-                    <th>Type</th>
-                    <th>Qty</th>
-                    <th>Entry</th>
-                    <th>Exit</th>
-                    <th>P&L</th>
-                    <th class="col-notes">Notes</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tradeTableBody"></tbody>
-        </table>
+    <div id="tab-guide" style="display: none;">
+        <div class="guide-box">
+            <h2>📖 Beginner's Guide to Data</h2>
+            <p>This journal is private. Your data lives on <b>this browser only</b>. It is not sent to any server. Here is how to keep it safe.</p>
+            
+            <div class="guide-step">
+                <h3>1. How to Backup (Save Data)</h3>
+                <p>Since data is only on this device, you should back it up regularly (e.g., once a week).</p>
+                <div class="guide-highlight">
+                    Click the <b>💾 Save Data</b> button.
+                </div>
+                <p>This will download a file named <code>trading_journal_backup.json</code> to your computer or phone. Keep this file safe!</p>
+            </div>
+
+            <div class="guide-step">
+                <h3>2. How to Restore (Load Data)</h3>
+                <p>If you switch computers, clear your browser history, or accidentally delete everything, you can get your data back.</p>
+                <div class="guide-highlight">
+                    Click <b>📂 Load Data</b> and select the <code>.json</code> file you saved earlier.
+                </div>
+                <p>This will restore all your previous trades instantly.</p>
+            </div>
+
+            <div class="guide-step">
+                <h3>3. Editing & Deleting</h3>
+                <p>Made a mistake? No problem.</p>
+                <ul>
+                    <li><b>✏️ Edit:</b> Click the pencil icon to fix a price or quantity.</li>
+                    <li><b>🗑️ Delete:</b> Click the trash icon to remove a trade.</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                ⚠️ <b>Important Warning:</b><br>
+                If you "Clear Browsing Data" or "Clear Cache" in your browser settings, your trades will be deleted. Always download a <b>Backup</b> before clearing your history!
+            </div>
+        </div>
     </div>
+
 </div>
 
 <script>
     let trades = JSON.parse(localStorage.getItem('tradingJournal')) || [];
-    let editId = null; // Track if we are editing
-    
-    // -- MODAL LOGIC --
+    let editId = null;
     let pendingCallback = null;
 
-    function showModal(title, message, callback) {
-        document.getElementById('modalTitle').innerText = title;
-        document.getElementById('modalMessage').innerText = message;
-        pendingCallback = callback;
-        document.getElementById('confirmModal').classList.add('open');
+    window.onload = function() { document.getElementById('date').valueAsDate = new Date(); render(); };
+
+    // --- TAB LOGIC ---
+    function switchTab(tabName, btn) {
+        // Hide all tabs
+        document.getElementById('tab-journal').style.display = 'none';
+        document.getElementById('tab-guide').style.display = 'none';
+        
+        // Remove active class from buttons
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        
+        // Show selected tab
+        document.getElementById('tab-' + tabName).style.display = 'block';
+        btn.classList.add('active');
     }
 
-    function closeModal() {
-        document.getElementById('confirmModal').classList.remove('open');
-        pendingCallback = null;
-    }
-
-    document.getElementById('confirmActionBtn').addEventListener('click', function() {
-        if(pendingCallback) pendingCallback();
-        closeModal();
-    });
-
-    // -- NOTIFICATION LOGIC --
-    function showNotification(message, type = 'success') {
-        const notif = document.getElementById('notification');
-        notif.textContent = message;
-        notif.className = ''; 
-        notif.classList.add('show');
-        notif.classList.add(type);
-        setTimeout(() => { notif.classList.remove('show'); }, 3000);
-    }
-
-    // -- MAIN LOGIC --
-    window.onload = function() {
-        document.getElementById('date').valueAsDate = new Date();
-        render();
-    };
-
+    // --- APP LOGIC ---
     function handleFormSubmit(e) {
         e.preventDefault();
-        
-        const type = document.getElementById('type').value;
-        const entry = parseFloat(document.getElementById('entry').value);
-        const exit = parseFloat(document.getElementById('exit').value);
-        const qty = parseInt(document.getElementById('qty').value);
-        const notes = document.getElementById('notes').value;
-        const symbol = document.getElementById('symbol').value.toUpperCase();
-        const date = document.getElementById('date').value;
-
-        let pnl = (type === 'LONG') ? (exit - entry) * qty : (entry - exit) * qty;
+        const data = {
+            date: document.getElementById('date').value,
+            symbol: document.getElementById('symbol').value.toUpperCase(),
+            type: document.getElementById('type').value,
+            entry: parseFloat(document.getElementById('entry').value),
+            exit: parseFloat(document.getElementById('exit').value),
+            qty: parseInt(document.getElementById('qty').value),
+            notes: document.getElementById('notes').value
+        };
+        data.pnl = (data.type === 'LONG') ? (data.exit - data.entry) * data.qty : (data.entry - data.exit) * data.qty;
 
         if (editId) {
-            // --- UPDATE EXISTING TRADE ---
             const index = trades.findIndex(t => t.id === editId);
-            if (index !== -1) {
-                trades[index] = {
-                    id: editId, // Keep original ID
-                    date, symbol, type, entry, exit, qty, pnl, notes
-                };
-                showNotification("Trade Updated Successfully!", "success");
-            }
-            editId = null;
-            resetFormUI();
+            if (index !== -1) trades[index] = { id: editId, ...data };
+            showNotification("Trade Updated!", "success");
+            editId = null; resetFormUI();
         } else {
-            // --- ADD NEW TRADE ---
-            const trade = {
-                id: Date.now(),
-                date, symbol, type, entry, exit, qty, pnl, notes
-            };
-            trades.unshift(trade);
-            showNotification("Trade Added Successfully!", "success");
+            trades.unshift({ id: Date.now(), ...data });
+            showNotification("Trade Added!", "success");
         }
-
         saveAndRender();
-        
-        // Reset form inputs (but keep date)
-        const currentDate = document.getElementById('date').value;
         document.getElementById('tradeForm').reset();
-        document.getElementById('date').value = currentDate;
+        document.getElementById('date').valueAsDate = new Date();
     }
 
-    // -- EDIT LOGIC --
     function editTrade(id) {
-        const trade = trades.find(t => t.id === id);
-        if (!trade) return;
-
-        // Populate Form
-        document.getElementById('date').value = trade.date;
-        document.getElementById('symbol').value = trade.symbol;
-        document.getElementById('type').value = trade.type;
-        document.getElementById('entry').value = trade.entry;
-        document.getElementById('exit').value = trade.exit;
-        document.getElementById('qty').value = trade.qty;
-        document.getElementById('notes').value = trade.notes || '';
-
-        // Change UI to Edit Mode
+        const t = trades.find(tr => tr.id === id);
+        if (!t) return;
+        document.getElementById('date').value = t.date;
+        document.getElementById('symbol').value = t.symbol;
+        document.getElementById('type').value = t.type;
+        document.getElementById('entry').value = t.entry;
+        document.getElementById('exit').value = t.exit;
+        document.getElementById('qty').value = t.qty;
+        document.getElementById('notes').value = t.notes || '';
         editId = id;
-        document.getElementById('submitBtn').innerText = "Update Trade";
-        document.getElementById('submitBtn').style.backgroundColor = "#f59e0b"; // Orange color
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Update Trade"; btn.style.backgroundColor = "#f59e0b";
         document.getElementById('cancelEditBtn').style.display = "block";
-        
-        // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function cancelEdit() {
-        editId = null;
-        document.getElementById('tradeForm').reset();
-        document.getElementById('date').valueAsDate = new Date();
-        resetFormUI();
+        editId = null; resetFormUI(); document.getElementById('tradeForm').reset(); document.getElementById('date').valueAsDate = new Date();
     }
-
     function resetFormUI() {
-        document.getElementById('submitBtn').innerText = "Add Trade";
-        document.getElementById('submitBtn').style.backgroundColor = ""; // Reset color
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Add Trade"; btn.style.backgroundColor = "";
         document.getElementById('cancelEditBtn').style.display = "none";
     }
 
-    // -- DELETE LOGIC --
-    function triggerDelete(id) {
-        showModal(
-            "Delete Trade?", 
-            "Are you sure you want to remove this trade entry?", 
-            () => deleteTrade(id)
-        );
-    }
-
-    function deleteTrade(id) {
-        trades = trades.filter(t => t.id !== id);
-        
-        // If we deleted the trade currently being edited, cancel edit mode
-        if (editId === id) {
-            cancelEdit();
-        }
-        
-        saveAndRender();
-        showNotification("Trade Deleted", "error");
-    }
-
-    function saveAndRender() {
-        localStorage.setItem('tradingJournal', JSON.stringify(trades));
-        render();
-    }
-
+    function triggerDelete(id) { showModal("Delete Trade?", "Are you sure?", () => { trades = trades.filter(t => t.id !== id); saveAndRender(); showNotification("Trade Deleted", "error"); }); }
+    function triggerClear() { showModal("Reset All?", "Deletes all data permanently.", () => { trades = []; saveAndRender(); showNotification("All Data Cleared", "error"); }); }
+    
+    function saveAndRender() { localStorage.setItem('tradingJournal', JSON.stringify(trades)); render(); }
+    
     function render() {
-        const tbody = document.getElementById('tradeTableBody');
-        tbody.innerHTML = '';
+        const tbody = document.getElementById('tradeTableBody'); tbody.innerHTML = '';
         let totalPnL = 0, wins = 0;
-
-        trades.forEach(trade => {
-            totalPnL += trade.pnl;
-            if(trade.pnl > 0) wins++;
-            
-            const row = `
-                <tr>
-                    <td>${trade.date}</td>
-                    <td><b>${trade.symbol}</b></td>
-                    <td><span style="color:${trade.type === 'LONG' ? 'blue' : 'orange'}">${trade.type}</span></td>
-                    <td>${trade.qty}</td>
-                    <td>${trade.entry}</td>
-                    <td>${trade.exit}</td>
-                    <td class="${trade.pnl >= 0 ? 'profit' : 'loss'}">
-                        ${trade.pnl >= 0 ? '+' : ''}${trade.pnl.toFixed(2)}
-                    </td>
-                    <td style="font-size: 0.85rem; color: #555;">${trade.notes || ''}</td>
-                    <td class="action-cell">
-                        <button class="icon-btn edit-btn" onclick="editTrade(${trade.id})" title="Edit">✏️</button>
-                        <button class="icon-btn delete-btn" onclick="triggerDelete(${trade.id})" title="Delete">🗑️</button>
-                    </td>
-                </tr>
-            `;
-            tbody.innerHTML += row;
+        trades.forEach(t => {
+            totalPnL += t.pnl; if(t.pnl > 0) wins++;
+            tbody.innerHTML += `<tr>
+                <td>${t.date}</td><td><b>${t.symbol}</b></td>
+                <td><span style="color:${t.type==='LONG'?'blue':'orange'}">${t.type}</span></td>
+                <td>${t.qty}</td><td>${t.entry}</td><td>${t.exit}</td>
+                <td class="${t.pnl>=0?'profit':'loss'}">${t.pnl>=0?'+':''}${t.pnl.toFixed(2)}</td>
+                <td style="font-size:0.85rem;color:#555;">${t.notes||''}</td>
+                <td class="action-cell"><button class="icon-btn" onclick="editTrade(${t.id})">✏️</button><button class="icon-btn" onclick="triggerDelete(${t.id})">🗑️</button></td>
+            </tr>`;
         });
-
         document.getElementById('totalPnL').innerText = `₹${totalPnL.toFixed(2)}`;
         document.getElementById('totalPnL').className = totalPnL >= 0 ? 'profit' : 'loss';
         document.getElementById('totalTrades').innerText = trades.length;
-        const winRate = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) : 0;
-        document.getElementById('winRate').innerText = `${winRate}%`;
+        document.getElementById('winRate').innerText = `${trades.length>0?((wins/trades.length)*100).toFixed(1):0}%`;
     }
 
     function downloadJSON() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trades));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "trading_journal_backup.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-        showNotification("Backup Downloaded!", "success");
+        const a = document.createElement('a');
+        a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trades));
+        a.download = "trading_journal_backup.json"; document.body.appendChild(a); a.click(); a.remove();
+        showNotification("File Downloaded!", "success");
     }
-
     function loadJSON(input) {
-        const file = input.files[0];
-        if (!file) return;
-
-        showModal(
-            "Overwrite Data?",
-            "Loading this file will REPLACE all your current trades. Continue?",
-            () => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const json = JSON.parse(e.target.result);
-                        if (Array.isArray(json)) {
-                            trades = json;
-                            saveAndRender();
-                            showNotification("Data Loaded Successfully!", "success");
-                        } else { 
-                            showNotification("Invalid JSON format!", "error"); 
-                        }
-                    } catch (err) { 
-                        showNotification("Error reading file!", "error"); 
-                    }
-                    input.value = ''; 
-                };
-                reader.readAsText(file);
-            }
-        );
+        const f = input.files[0]; if(!f) return;
+        showModal("Overwrite Data?", "This replaces current trades.", () => {
+            const r = new FileReader();
+            r.onload = e => { 
+                try { trades = JSON.parse(e.target.result); saveAndRender(); showNotification("Loaded!", "success"); } 
+                catch(err) { showNotification("Invalid File", "error"); } 
+            }; r.readAsText(f);
+        });
+        input.value = '';
     }
 
-    function triggerClear() {
-        showModal(
-            "Clear All Data?", 
-            "This will permanently delete every trade in your journal. Are you really sure?", 
-            () => {
-                trades = [];
-                saveAndRender();
-                showNotification("All Data Cleared", "error");
-            }
-        );
+    function showModal(title, msg, cb) {
+        document.getElementById('modalTitle').innerText = title; document.getElementById('modalMessage').innerText = msg;
+        pendingCallback = cb; document.getElementById('confirmModal').classList.add('open');
+    }
+    function closeModal() { document.getElementById('confirmModal').classList.remove('open'); pendingCallback = null; }
+    document.getElementById('confirmActionBtn').addEventListener('click', () => { if(pendingCallback) pendingCallback(); closeModal(); });
+
+    function showNotification(msg, type) {
+        const n = document.getElementById('notification'); n.innerText = msg; n.className = 'show ' + type;
+        setTimeout(() => n.className = '', 3000);
     }
 </script>
-
 </body>
 </html>
