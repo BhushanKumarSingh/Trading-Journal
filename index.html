@@ -29,7 +29,7 @@
             margin: 0 auto;
         }
 
-        /* --- NOTIFICATION (TOAST) --- */
+        /* --- NOTIFICATION (TOAST) - TOP RIGHT --- */
         #notification {
             visibility: hidden; 
             min-width: 250px; 
@@ -40,15 +40,25 @@
             padding: 16px; 
             position: fixed; 
             z-index: 1000; 
-            left: 50%; 
-            top: 30px; 
-            transform: translateX(-50%);
+            
+            /* POSITIONING UPDATED TO TOP-RIGHT */
+            right: 20px;
+            top: 20px;
+            left: auto; /* Remove centering */
+            transform: translateY(-20px); /* Start slightly above for slide effect */
+            
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             font-weight: 500;
             opacity: 0;
-            transition: opacity 0.3s, top 0.3s;
+            transition: opacity 0.3s, transform 0.3s;
         }
-        #notification.show { visibility: visible; opacity: 1; top: 50px; }
+
+        #notification.show { 
+            visibility: visible; 
+            opacity: 1; 
+            transform: translateY(0); /* Slide down into place */
+        }
+        
         #notification.success { background-color: var(--green); }
         #notification.error { background-color: var(--red); }
 
@@ -128,7 +138,7 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 900px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
         th { background-color: #f8fafc; font-weight: 600; }
-        .col-notes { width: 35%; } /* Increased width since chart col is gone */
+        .col-notes { width: 35%; }
         .col-date { width: 100px; }
         .profit { color: var(--green); font-weight: bold; }
         .loss { color: var(--red); font-weight: bold; }
@@ -305,7 +315,6 @@
         document.getElementById('date').value = currentDate;
     }
 
-    // Trigger Delete with Modal
     function triggerDelete(id) {
         showModal(
             "Delete Trade?", 
