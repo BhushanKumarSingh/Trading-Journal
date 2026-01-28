@@ -7,50 +7,23 @@
     <style>
         :root { --bg-color: #f4f6f8; --card-bg: #ffffff; --primary: #2563eb; --text: #1e293b; --green: #10b981; --red: #ef4444; --orange: #f59e0b; --border: #e2e8f0; --overlay: rgba(0, 0, 0, 0.5); }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); color: var(--text); margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1000px; margin: 0 auto; }
 
         /* --- NAVIGATION TABS --- */
         .nav-container { display: flex; justify-content: center; margin-bottom: 25px; }
         .nav-tabs { background: white; padding: 5px; border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: inline-flex; }
-        .nav-btn {
-            border: none; background: none; padding: 10px 25px; border-radius: 25px;
-            cursor: pointer; font-weight: 600; color: #64748b; transition: all 0.2s;
-        }
+        .nav-btn { border: none; background: none; padding: 10px 25px; border-radius: 25px; cursor: pointer; font-weight: 600; color: #64748b; transition: all 0.2s; }
         .nav-btn.active { background-color: var(--primary); color: white; shadow: 0 2px 5px rgba(37, 99, 235, 0.3); }
         .nav-btn:hover:not(.active) { background-color: #f1f5f9; }
 
-        /* --- GUIDE SECTION STYLES --- */
-        .guide-box { background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
-        .guide-step { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid var(--border); }
-        .guide-step:last-child { border-bottom: none; }
-        .guide-step h3 { margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-        .guide-step p { line-height: 1.6; color: #475569; }
-        .guide-highlight { background: #eff6ff; border-left: 4px solid var(--primary); padding: 15px; margin-top: 10px; border-radius: 0 4px 4px 0; }
-        .warning-box { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 15px; border-radius: 8px; margin-top: 20px; font-weight: 500; }
-
-        /* Notification - Top Right */
-        #notification { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; right: 20px; top: 20px; transform: translateY(-20px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; opacity: 0; transition: opacity 0.3s, transform 0.3s; }
-        #notification.show { visibility: visible; opacity: 1; transform: translateY(0); }
-        #notification.success { background-color: var(--green); }
-        #notification.error { background-color: var(--red); }
-
-        /* Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
-        .modal-overlay.open { display: flex; }
-        .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.2s ease-out; }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
-        .btn-modal { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
-        .btn-cancel { background: #e2e8f0; color: var(--text); }
-        .btn-confirm { background: var(--red); color: white; }
-
-        /* Main UI */
+        /* --- HEADER & STATS --- */
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .stat-card h3 { margin: 0 0 5px 0; font-size: 0.9rem; color: #64748b; }
         .stat-card p { margin: 0; font-size: 1.5rem; font-weight: bold; }
         
+        /* --- FORM --- */
         .input-section { background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; align-items: start; }
         .form-group { display: flex; flex-direction: column; }
@@ -66,6 +39,7 @@
         .outline-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
         #fileInput { display: none; }
         
+        /* --- TABLE --- */
         .table-container { background: var(--card-bg); border-radius: 8px; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.1); min-height: 200px; }
         table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 900px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
@@ -74,12 +48,36 @@
         .loss { color: var(--red); font-weight: bold; }
         .action-cell { display: flex; gap: 8px; }
         .icon-btn { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px; border-radius: 4px; }
+        
+        /* DATE GROUP HEADERS */
+        .date-header { background-color: #f1f5f9; }
+        .date-header td { padding: 10px 15px; border-bottom: 1px solid #cbd5e1; }
+        .date-title { font-weight: 600; color: #475569; display: flex; align-items: center; gap: 8px; }
+        .daily-summary { float: right; font-weight: bold; font-size: 0.95rem; }
+
+        /* --- EXTRAS --- */
+        .guide-box { background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
+        .guide-step { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid var(--border); }
+        .guide-highlight { background: #eff6ff; border-left: 4px solid var(--primary); padding: 15px; margin-top: 10px; border-radius: 0 4px 4px 0; }
+        
+        #notification { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; right: 20px; top: 20px; transform: translateY(-20px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; opacity: 0; transition: opacity 0.3s, transform 0.3s; }
+        #notification.show { visibility: visible; opacity: 1; transform: translateY(0); }
+        #notification.success { background-color: var(--green); }
+        #notification.error { background-color: var(--red); }
+        
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .modal-overlay.open { display: flex; }
+        .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.2s ease-out; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        .btn-modal { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
+        .btn-cancel { background: #e2e8f0; color: var(--text); }
+        .btn-confirm { background: var(--red); color: white; }
     </style>
 </head>
 <body>
 
 <div id="notification"></div>
-
 <div id="confirmModal" class="modal-overlay">
     <div class="modal-box">
         <h3 id="modalTitle">Are you sure?</h3>
@@ -104,8 +102,8 @@
         <header>
             <h1>My Trading Journal</h1>
             <div class="controls">
-                <button class="outline-btn" onclick="downloadJSON()">💾 Save Data</button>
-                <button class="outline-btn" onclick="document.getElementById('fileInput').click()">📂 Load Data</button>
+                <button class="outline-btn" onclick="downloadJSON()">💾 Save</button>
+                <button class="outline-btn" onclick="document.getElementById('fileInput').click()">📂 Load</button>
                 <button class="outline-btn" style="border-color: #ef4444; color: #ef4444;" onclick="triggerClear()">🗑️ Reset</button>
                 <input type="file" id="fileInput" accept=".json" onchange="loadJSON(this)">
             </div>
@@ -128,7 +126,7 @@
                     <div class="form-group"><label>Quantity</label><input type="number" id="qty" required></div>
                     <div class="form-group full-width"><label>Notes</label><textarea id="notes" rows="2"></textarea></div>
                     <div class="form-group full-width btn-group">
-                        <button type="button" class="cancel-btn" id="cancelEditBtn" onclick="cancelEdit()">Cancel Edit</button>
+                        <button type="button" class="cancel-btn" id="cancelEditBtn" onclick="cancelEdit()">Cancel</button>
                         <button type="submit" class="add-btn" id="submitBtn">Add Trade</button>
                     </div>
                 </div>
@@ -137,7 +135,7 @@
 
         <div class="table-container">
             <table>
-                <thead><tr><th>Date</th><th>Symbol</th><th>Type</th><th>Qty</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Notes</th><th>Action</th></tr></thead>
+                <thead><tr><th>Symbol</th><th>Type</th><th>Qty</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Notes</th><th>Action</th></tr></thead>
                 <tbody id="tradeTableBody"></tbody>
             </table>
         </div>
@@ -145,43 +143,18 @@
 
     <div id="tab-guide" style="display: none;">
         <div class="guide-box">
-            <h2>📖 Beginner's Guide to Data</h2>
-            <p>This journal is private. Your data lives on <b>this browser only</b>. It is not sent to any server. Here is how to keep it safe.</p>
-            
+            <h2>📖 Beginner's Guide</h2>
             <div class="guide-step">
-                <h3>1. How to Backup (Save Data)</h3>
-                <p>Since data is only on this device, you should back it up regularly (e.g., once a week).</p>
-                <div class="guide-highlight">
-                    Click the <b>💾 Save Data</b> button.
-                </div>
-                <p>This will download a file named <code>trading_journal_backup.json</code> to your computer or phone. Keep this file safe!</p>
+                <h3>1. Saving Data (Backup)</h3>
+                <p>Click <b>💾 Save</b> to download your <code>.json</code> backup file.</p>
+                <div class="guide-highlight">This saves a file named <code>trading_journal_backup.json</code> to your device.</div>
             </div>
-
             <div class="guide-step">
-                <h3>2. How to Restore (Load Data)</h3>
-                <p>If you switch computers, clear your browser history, or accidentally delete everything, you can get your data back.</p>
-                <div class="guide-highlight">
-                    Click <b>📂 Load Data</b> and select the <code>.json</code> file you saved earlier.
-                </div>
-                <p>This will restore all your previous trades instantly.</p>
-            </div>
-
-            <div class="guide-step">
-                <h3>3. Editing & Deleting</h3>
-                <p>Made a mistake? No problem.</p>
-                <ul>
-                    <li><b>✏️ Edit:</b> Click the pencil icon to fix a price or quantity.</li>
-                    <li><b>🗑️ Delete:</b> Click the trash icon to remove a trade.</li>
-                </ul>
-            </div>
-
-            <div class="warning-box">
-                ⚠️ <b>Important Warning:</b><br>
-                If you "Clear Browsing Data" or "Clear Cache" in your browser settings, your trades will be deleted. Always download a <b>Backup</b> before clearing your history!
+                <h3>2. Loading Data (Restore)</h3>
+                <p>Click <b>📂 Load</b> to restore your trades from a backup file.</p>
             </div>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -191,21 +164,14 @@
 
     window.onload = function() { document.getElementById('date').valueAsDate = new Date(); render(); };
 
-    // --- TAB LOGIC ---
     function switchTab(tabName, btn) {
-        // Hide all tabs
         document.getElementById('tab-journal').style.display = 'none';
         document.getElementById('tab-guide').style.display = 'none';
-        
-        // Remove active class from buttons
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        
-        // Show selected tab
         document.getElementById('tab-' + tabName).style.display = 'block';
         btn.classList.add('active');
     }
 
-    // --- APP LOGIC ---
     function handleFormSubmit(e) {
         e.preventDefault();
         const data = {
@@ -250,69 +216,67 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function cancelEdit() {
-        editId = null; resetFormUI(); document.getElementById('tradeForm').reset(); document.getElementById('date').valueAsDate = new Date();
-    }
-    function resetFormUI() {
-        const btn = document.getElementById('submitBtn');
-        btn.innerText = "Add Trade"; btn.style.backgroundColor = "";
-        document.getElementById('cancelEditBtn').style.display = "none";
-    }
-
+    function cancelEdit() { editId = null; resetFormUI(); document.getElementById('tradeForm').reset(); document.getElementById('date').valueAsDate = new Date(); }
+    function resetFormUI() { document.getElementById('submitBtn').innerText = "Add Trade"; document.getElementById('submitBtn').style.backgroundColor = ""; document.getElementById('cancelEditBtn').style.display = "none"; }
     function triggerDelete(id) { showModal("Delete Trade?", "Are you sure?", () => { trades = trades.filter(t => t.id !== id); saveAndRender(); showNotification("Trade Deleted", "error"); }); }
     function triggerClear() { showModal("Reset All?", "Deletes all data permanently.", () => { trades = []; saveAndRender(); showNotification("All Data Cleared", "error"); }); }
-    
     function saveAndRender() { localStorage.setItem('tradingJournal', JSON.stringify(trades)); render(); }
-    
+
     function render() {
-        const tbody = document.getElementById('tradeTableBody'); tbody.innerHTML = '';
+        const tbody = document.getElementById('tradeTableBody');
+        tbody.innerHTML = '';
+        trades.sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
+
         let totalPnL = 0, wins = 0;
-        trades.forEach(t => {
-            totalPnL += t.pnl; if(t.pnl > 0) wins++;
-            tbody.innerHTML += `<tr>
-                <td>${t.date}</td><td><b>${t.symbol}</b></td>
-                <td><span style="color:${t.type==='LONG'?'blue':'orange'}">${t.type}</span></td>
-                <td>${t.qty}</td><td>${t.entry}</td><td>${t.exit}</td>
-                <td class="${t.pnl>=0?'profit':'loss'}">${t.pnl>=0?'+':''}${t.pnl.toFixed(2)}</td>
-                <td style="font-size:0.85rem;color:#555;">${t.notes||''}</td>
-                <td class="action-cell"><button class="icon-btn" onclick="editTrade(${t.id})">✏️</button><button class="icon-btn" onclick="triggerDelete(${t.id})">🗑️</button></td>
-            </tr>`;
-        });
+        trades.forEach(t => { totalPnL += t.pnl; if(t.pnl > 0) wins++; });
         document.getElementById('totalPnL').innerText = `₹${totalPnL.toFixed(2)}`;
         document.getElementById('totalPnL').className = totalPnL >= 0 ? 'profit' : 'loss';
         document.getElementById('totalTrades').innerText = trades.length;
         document.getElementById('winRate').innerText = `${trades.length>0?((wins/trades.length)*100).toFixed(1):0}%`;
-    }
 
-    function downloadJSON() {
-        const a = document.createElement('a');
-        a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trades));
-        a.download = "trading_journal_backup.json"; document.body.appendChild(a); a.click(); a.remove();
-        showNotification("File Downloaded!", "success");
-    }
-    function loadJSON(input) {
-        const f = input.files[0]; if(!f) return;
-        showModal("Overwrite Data?", "This replaces current trades.", () => {
-            const r = new FileReader();
-            r.onload = e => { 
-                try { trades = JSON.parse(e.target.result); saveAndRender(); showNotification("Loaded!", "success"); } 
-                catch(err) { showNotification("Invalid File", "error"); } 
-            }; r.readAsText(f);
+        // Group Trades by Date
+        const grouped = trades.reduce((acc, trade) => {
+            if (!acc[trade.date]) acc[trade.date] = [];
+            acc[trade.date].push(trade);
+            return acc;
+        }, {});
+
+        // Render Groups
+        Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+            const dayTrades = grouped[date];
+            const dailyPnL = dayTrades.reduce((sum, t) => sum + t.pnl, 0);
+            
+            // Header Row
+            tbody.innerHTML += `
+                <tr class="date-header">
+                    <td colspan="8">
+                        <span class="date-title">📅 ${new Date(date).toDateString()}</span>
+                        <span class="daily-summary ${dailyPnL >= 0 ? 'profit' : 'loss'}">Daily Net: ${dailyPnL >= 0 ? '+' : ''}${dailyPnL.toFixed(2)}</span>
+                    </td>
+                </tr>
+            `;
+
+            // Trade Rows
+            dayTrades.forEach(t => {
+                tbody.innerHTML += `
+                <tr>
+                    <td><b>${t.symbol}</b></td>
+                    <td><span style="color:${t.type==='LONG'?'blue':'orange'}">${t.type}</span></td>
+                    <td>${t.qty}</td><td>${t.entry}</td><td>${t.exit}</td>
+                    <td class="${t.pnl>=0?'profit':'loss'}">${t.pnl>=0?'+':''}${t.pnl.toFixed(2)}</td>
+                    <td style="font-size:0.85rem;color:#555;">${t.notes||''}</td>
+                    <td class="action-cell"><button class="icon-btn" onclick="editTrade(${t.id})">✏️</button><button class="icon-btn" onclick="triggerDelete(${t.id})">🗑️</button></td>
+                </tr>`;
+            });
         });
-        input.value = '';
     }
 
-    function showModal(title, msg, cb) {
-        document.getElementById('modalTitle').innerText = title; document.getElementById('modalMessage').innerText = msg;
-        pendingCallback = cb; document.getElementById('confirmModal').classList.add('open');
-    }
+    function downloadJSON() { const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trades)); a.download = "trading_journal_backup.json"; document.body.appendChild(a); a.click(); a.remove(); showNotification("File Downloaded!", "success"); }
+    function loadJSON(input) { const f = input.files[0]; if(!f) return; showModal("Overwrite Data?", "This replaces current trades.", () => { const r = new FileReader(); r.onload = e => { try { trades = JSON.parse(e.target.result); saveAndRender(); showNotification("Loaded!", "success"); } catch(err) { showNotification("Invalid File", "error"); } }; r.readAsText(f); }); input.value = ''; }
+    function showModal(title, msg, cb) { document.getElementById('modalTitle').innerText = title; document.getElementById('modalMessage').innerText = msg; pendingCallback = cb; document.getElementById('confirmModal').classList.add('open'); }
     function closeModal() { document.getElementById('confirmModal').classList.remove('open'); pendingCallback = null; }
     document.getElementById('confirmActionBtn').addEventListener('click', () => { if(pendingCallback) pendingCallback(); closeModal(); });
-
-    function showNotification(msg, type) {
-        const n = document.getElementById('notification'); n.innerText = msg; n.className = 'show ' + type;
-        setTimeout(() => n.className = '', 3000);
-    }
+    function showNotification(msg, type) { const n = document.getElementById('notification'); n.innerText = msg; n.className = 'show ' + type; setTimeout(() => n.className = '', 3000); }
 </script>
 </body>
 </html>
