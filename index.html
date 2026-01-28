@@ -16,21 +16,14 @@
         .nav-btn.active { background-color: var(--primary); color: white; shadow: 0 2px 5px rgba(37, 99, 235, 0.3); }
         .nav-btn:hover:not(.active) { background-color: #f1f5f9; }
 
-        /* --- CALENDAR STYLES (NEW) --- */
+        /* --- CALENDAR STYLES --- */
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .calendar-header h2 { margin: 0; font-size: 1.2rem; color: var(--text); }
         .month-btn { background: transparent; border: 1px solid var(--border); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .month-btn:hover { background: #f8fafc; }
-        
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
         .day-name { text-align: center; font-weight: 600; color: #64748b; padding-bottom: 10px; font-size: 0.9rem; }
-        
-        .calendar-cell { 
-            background: white; border-radius: 8px; border: 1px solid var(--border); 
-            min-height: 80px; padding: 8px; position: relative; 
-            display: flex; flex-direction: column; justify-content: space-between;
-            transition: transform 0.1s;
-        }
+        .calendar-cell { background: white; border-radius: 8px; border: 1px solid var(--border); min-height: 80px; padding: 8px; position: relative; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.1s; }
         .calendar-cell:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .date-num { font-weight: 600; font-size: 0.9rem; color: #334155; }
         .cal-pnl { font-weight: 700; font-size: 0.95rem; text-align: right; }
@@ -39,7 +32,7 @@
         .empty-cell { background: transparent; border: none; }
         .today-cell { border: 2px solid var(--primary); background-color: #eff6ff; }
 
-        /* --- STANDARD STYLES --- */
+        /* --- STANDARD UI --- */
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
@@ -75,10 +68,16 @@
         .date-title { font-weight: 600; color: #475569; display: flex; align-items: center; gap: 8px; }
         .daily-summary { float: right; font-weight: bold; font-size: 0.95rem; }
 
+        /* --- DETAILED GUIDE STYLES --- */
         .guide-box { background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
         .guide-step { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid var(--border); }
+        .guide-step:last-child { border-bottom: none; }
+        .guide-step h3 { margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .guide-step p { line-height: 1.6; color: #475569; }
         .guide-highlight { background: #eff6ff; border-left: 4px solid var(--primary); padding: 15px; margin-top: 10px; border-radius: 0 4px 4px 0; }
+        .warning-box { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 15px; border-radius: 8px; margin-top: 20px; font-weight: 500; }
         
+        /* --- NOTIFICATION & MODAL --- */
         #notification { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; right: 20px; top: 20px; transform: translateY(-20px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 500; opacity: 0; transition: opacity 0.3s, transform 0.3s; }
         #notification.show { visibility: visible; opacity: 1; transform: translateY(0); }
         #notification.success { background-color: var(--green); }
@@ -173,15 +172,39 @@
 
     <div id="tab-guide" style="display: none;">
         <div class="guide-box">
-            <h2>📖 Beginner's Guide</h2>
+            <h2>📖 Beginner's Guide to Data</h2>
+            <p>This journal is private. Your data lives on <b>this browser only</b>. It is not sent to any server. Here is how to keep it safe.</p>
+            
             <div class="guide-step">
-                <h3>1. Saving Data (Backup)</h3>
-                <p>Click <b>💾 Save</b> to download your <code>.json</code> backup file.</p>
-                <div class="guide-highlight">This saves a file named <code>trading_journal_backup.json</code> to your device.</div>
+                <h3>1. How to Backup (Save Data)</h3>
+                <p>Since data is only on this device, you should back it up regularly (e.g., once a week).</p>
+                <div class="guide-highlight">
+                    Click the <b>💾 Save</b> button.
+                </div>
+                <p>This will download a file named <code>trading_journal_backup.json</code> to your computer or phone. Keep this file safe!</p>
             </div>
+
             <div class="guide-step">
-                <h3>2. Loading Data (Restore)</h3>
-                <p>Click <b>📂 Load</b> to restore your trades from a backup file.</p>
+                <h3>2. How to Restore (Load Data)</h3>
+                <p>If you switch computers, clear your browser history, or accidentally delete everything, you can get your data back.</p>
+                <div class="guide-highlight">
+                    Click <b>📂 Load</b> and select the <code>.json</code> file you saved earlier.
+                </div>
+                <p>This will restore all your previous trades instantly.</p>
+            </div>
+
+            <div class="guide-step">
+                <h3>3. Editing & Deleting</h3>
+                <p>Made a mistake? No problem.</p>
+                <ul>
+                    <li><b>✏️ Edit:</b> Click the pencil icon to fix a price or quantity.</li>
+                    <li><b>🗑️ Delete:</b> Click the trash icon to remove a trade.</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                ⚠️ <b>Important Warning:</b><br>
+                If you "Clear Browsing Data" or "Clear Cache" in your browser settings, your trades will be deleted. Always download a <b>Backup</b> before clearing your history!
             </div>
         </div>
     </div>
@@ -236,9 +259,7 @@
     }
 
     function editTrade(id) {
-        // Switch to Journal tab first
-        switchTab('journal', document.querySelector('.nav-btn'));
-        
+        switchTab('journal', document.querySelector('.nav-btn')); // Switch to journal to see form
         const t = trades.find(tr => tr.id === id);
         if (!t) return;
         document.getElementById('date').value = t.date;
@@ -316,26 +337,19 @@
         const calendarEl = document.getElementById('calendarGrid');
         calendarEl.innerHTML = '';
         
-        // Month Header
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         document.getElementById('currentMonthDisplay').innerText = `${monthNames[currentMonth]} ${currentYear}`;
 
-        // Header Days
         const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         days.forEach(d => calendarEl.innerHTML += `<div class="day-name">${d}</div>`);
 
-        // Calc Date Info
         const firstDay = new Date(currentYear, currentMonth, 1).getDay();
         const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-        // Empty Slots
         for(let i=0; i<firstDay; i++) calendarEl.innerHTML += `<div class="empty-cell"></div>`;
 
-        // Day Cells
         for(let day=1; day<=daysInMonth; day++) {
             const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            
-            // Calculate Daily P&L for Calendar
             const dayPnL = trades.filter(t => t.date === dateStr).reduce((sum, t) => sum + t.pnl, 0);
             
             let pnlHtml = '';
